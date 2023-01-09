@@ -1,0 +1,605 @@
+/////////////////////////////////////////////////////// slip 1  ////////////////////////////////////////////////
+
+/*
+
+
+cd $HADOOP_HOME/sbin/
+
+./start-dfs.sh
+
+
+./start-yarn.sh
+
+
+ hadoop version
+
+
+
+*/
+
+
+hadoop version
+
+cd /
+
+cd hadoop-3.3.4
+
+cd sbin
+
+
+start-dfs.sh
+
+hadoop version
+
+hadoop fs -mkdir data                      linux-> hadoop fs -mkdir /data
+
+hadoop fs -ls						 	linux->	hadoop fs -ls
+
+
+1(remove directory)
+hadoop fs -mkdir demo					hadoop fs -mkdir /demo
+
+hadoop fs -ls							hadoop fs -ls
+
+hadoop fs -rmr demo						hadoop fs -rmr /demo
+
+2) copy file from hadoop to root directory
+ 
+									( hadoop fs -get /SG/a2.txt /opt/hadoop/Desktop/AAAAA )
+
+
+
+hadoop fs -ls data\						 (hadoop fs -ls /data )
+
+Found 2 items
+-rw-r--r--   1 Administrators None         15 2023-01-08 20:54 data/Two.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+
+30 cat 								( hadoop fs -cat /opt/hadoop/BDA/a1.txt )
+hadoop fs -cat data\two.txt
+Output :
+
+data is here...
+
+
+4) expunge command
+hadoop fs -rm data\two.txt	        (hadoop fs -rm /data/two.txt)
+
+hadoop fs -expunge					hadoop fs -expunge
+				
+
+
+5) df command
+hadoop fs -df data		              (hadoop fs -df /data)
+
+output
+Filesystem          Size          Used     Available  Use%
+file:///    512092008448  125421277184  386670731264   24%
+
+
+//////////////////////////////////////////////////////// slip 2 ////////////////////////////////////////////////
+
+
+1) list of files 
+
+hadoop fs -ls data\	        	(hadoop fs -ls /data)
+Found 2 items
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:06 data/Two.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+
+
+2) Insert data
+hadoop fs -copyFromLocal "C:\Users\Acer\Desktop\four.txt" data	  (hadoop fs -copyFromLocal /opt/hadoop/BDA/a2.txt /SG)			
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data\								linux -> hadoop fs -ls /data
+Found 3 items
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:06 data/Two.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:44 data/four.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+
+hadoop fs -cat data\four.txt									 (hadoop fs -cat /data/four.txt)
+data is here...
+
+
+3) retrive data
+hadoop fs -copyToLocal data\four.txt "C:\Users\Acer\Desktop\new"			 (hadoop fs -copyToLocal /SG/P1.txt /opt/hadoop/Desktop/AAAA)
+
+4) append file from local to hdfs 							(hadoop fs -appendToFile data.txt /test/test.txt)
+
+hadoop fs -appendToFile "C:\Users\Acer\Desktop\three_new.txt" data \two.txt					
+  (hadoop fs -appendToFile sorce folder name(local) destination folder name(hadoop))
+appendToFile: File already exists: file:/C:/hadoop-3.3.4/sbin/two.txt
+
+5) Shut down hdfs 
+stop-dfs.sh
+
+
+////////////////////////////////////////////////////////////////////////  slip 3  //////////////////////////////////////////
+
+
+
+1) copy file from local to hadoop
+
+hadoop fs -mv "C:\Users\Acer\Desktop\emp.txt" data1		(hadoop fs -put /opt/hadoop/BDA/P1.txt /SG)
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data1\				 (hadoop fs -ls /data1)
+Found 2 items
+-rwx------   1 Acer           None         12 2023-01-08 23:12 data1/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:07 data1/three.txt
+
+
+2) display the statistics about the file.(use default format).     (hadoop fs -stat /test/test.txt)
+
+hadoop fs -stat %y data1/emp.txt
+stat: `y': No such file or directory
+2023-01-08 17:42:49
+
+3) change the permission of the file
+
+hadoop fs -chmod 777 data1\emp.txt								(hadoop fs -chmod 0777 /test/test.txt)					
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data1   						(hadoop fs -ls/)                 
+Found 2 items
+-rwxrwxrwx   1 Acer           None         12 2023-01-08 23:12 data1/emp.txt
+-rwxrwxrwx   1 Administrators None         15 2023-01-08 22:07 data1/three.txt
+
+4)implement checksum command
+
+
+hadoop fs -checksum data1/emp.txt                       (hadoop fs -checksum /data1/emp.txt)
+data1/emp.txt   NONE
+
+5) delete emp.txt							
+hadoop fs -rm data1\emp.txt					( hadoop fs -rm /data1/emp.txt)
+2023-01-08 23:50:38,899 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted data1/emp.txt
+
+
+////////////////////////////////////////  4//////////////////////////////////////////////////////////////////////////
+
+1) copy file from local to hadoop
+
+hadoop fs -mv "C:\Users\Acer\Desktop\emp.txt" data1		(hadoop fs -put /opt/hadoop/BDA/P1.txt /SG) 
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data1\				
+Found 2 items
+-rwx------   1 Acer           None         12 2023-01-08 23:12 data1/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:07 data1/three.txt
+
+
+2)  display last few line in emp.txt
+hadoop fs -tail -f data1\emp.txt				(hadoop fs -tail -f /data1/emp.txt)
+data is here...
+
+
+3)du command
+hadoop fs -du data1\emp.txt			(  hadoop fs -du /data1/emp.txt)
+15  15  data1/emp.txt
+
+4) df command
+
+hadoop fs -df data1\emp.txt					(hadoop fs -df /data1/emp.txt)
+Filesystem          Size          Used     Available  Use%
+file:///    512092008448  124523458560  387568549888   24%
+
+5) fsck
+
+
+hadoop fsck
+
+
+
+
+////////////////////////////////////////////////////////////////////////  slip 5   ////////////////////////////////////////////////////////////////////////////
+
+1) count the number of files and directories in HDFS.(Use options for the command)
+
+
+hadoop fs -count  data\emp.txt							( hadoop fs -count  /data/emp.txt)
+
+           0            1                 12 data/emp.txt
+
+
+2)find
+
+hadoop fs -find data1\						( hadoop fs -find /data1)
+data1
+data1/emp.txt
+data1/three.txt
+
+
+
+
+3)getmerge  (source hdfs destiation local)					( hadoop fs -getmerge -nl /data1/emp.txt five.txt)	
+
+									 
+
+hadoop fs -getmerge -nl data1\emp.txt data1\three.txt five.txt
+
+C:\hadoop-3.3.4\sbin>hadoop fs -cat five.txt
+data is here...
+data is here...
+
+4) usage
+
+
+hadoop fs -usage chmod						(hadoop fs -usage chmod	)
+
+Usage: hadoop fs [generic options] -chmod [-R] <MODE[,MODE]... | OCTALMODE> PATH...
+
+
+
+
+5) test
+
+
+
+hadoop fs -test -d neww3				(hadoop fs -test -d /neww3)
+
+C:\hadoop-3.3.4\sbin>echo $?
+0
+
+
+
+//////////////////////////////////////////////// slip 6 /////////////////////////////////////////////////////
+
+
+
+1)    
+
+hadoop fs -touchz studentdata				(hadoop fs -touchz studentdata.txt)
+hadoop fs -ls
+
+
+
+2)put
+
+hadoop fs -put "C:\Users\Acer\Desktop\four.txt" data1\			   (hadoop fs -put /opt/hadoop/BDA/P1.txt /SG)
+													
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data1\							hadoop fs -ls /data1
+
+
+
+
+3) tail 
+hadoop fs -tail  -f data1\four.txt								(hadoop fs -tail /data1/four.txt )
+data is here...
+
+
+4) fsck														(hadoop fsck)
+hadoop fsck
+
+
+5 )  display the list of files in specified directory
+
+
+hadoop fs -ls data1\										(hadoop fs -ls /SG)
+Found 4 items
+-rwx------   1 Acer           None         15 2023-01-08 20:52 data1/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-09 10:58 data1/four.txt
+-rw-r--r--   1 Administrators None         15 2023-01-09 10:53 data1/studentdata.txt
+-rwxrwxrwx   1 Administrators None         15 2023-01-08 22:07 data1/three.txt
+
+
+
+ ///////////////////////////////////////////////////////////////////////////  slip 7 ////////////////////////////////////////////////////////////
+
+1) mkdir
+
+hadoop fs -mkdir dir							(hadoop fs -mkdir /demo)
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls
+
+
+
+2)copy demo.txt in hadoop
+
+hadoop fs -copyFromLocal "C:\Users\Acer\Desktop\demo.txt" data1\      (hadoop fs -copyFromLocal /opt/hadoop/BDA/a2.txt /SG)
+
+hadoop fs -ls data1\										(hadoop fs -ls /SG)
+
+
+3)  move directory to another directory
+
+
+hadoop fs -mv dir\ data1\									(hadoop fs -mv /SG/P1.txt /SG2)
+
+hadoop fs -ls data1\
+
+4) tail 
+hadoop fs -tail -f data1\emp.txt								(hadoop fs -tail -f /p1/abc.txt)
+data is here...
+
+5) delete file from hadoop
+
+
+hadoop fs -rm data1\four.txt									(hadoop fs -rm /P1/a.txt)
+
+
+2023-01-09 11:31:24,473 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted data1/four.txt
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data1
+
+
+
+///////////////////////////////////////////////////// 8 /////////////////////////////////////////////////////////////
+
+1) change group of sample.zip					
+
+hadoop fs -chgrp mygrp data1\											(hadoop fs -chgrp mygrp /data1)
+
+chgrp: changing ownership of 'data1': GetSidFromAcctName error (1332): No mapping between account names and security IDs was done.
+
+
+
+2)changing the owner of a file name sample.
+hadoop fs -chown shivraj data1\									(hadoop fs -chown shivraj /data)
+
+3)  prints a summary of the amount of disk usage of all files.
+
+hadoop fs -du data1/demo.txt									(hadoop fs -du /data/demo.txt)
+15  15  data1/demo.txt
+
+4)show last modified time of directory
+
+
+hadoop fs -stat data1\demo.txt								(hadoop fs -stat /data1/demo.txt)
+2023-01-09 05:56:43
+
+5)implement test command
+
+hadoop fs -test -d data1								(hadoop fs -test -d /data1/demo.txt)
+echo $?											 (echo $?)
+
+
+
+///////////////////////////////////////////////////// 9  //////////////////////////////////////////////////////////////////////////
+
+
+1) create empty file in hdfs
+
+hadoop fs -touchz file.txt							( hadoop fs -touchz file.txt)
+
+hadoop fs -ls										(hadoop fs -ls)
+
+
+2)  copy sample.txt from local environment to HDFS
+
+hadoop fs -copyFromLocal "C:\Users\Acer\Desktop\sample.txt" data\		(hadoop fs -copyFromLocal /opt/hadoop/BDA/a2.txt /SG
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data\
+Found 5 items
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:06 data/Two.txt
+-rw-r--r--   1 Administrators None         12 2023-01-08 23:16 data/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:44 data/four.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-09 12:50 data/sample.txt
+
+3)  print the content of sample.txt file
+
+hadoop fs -cat data\sample.txt								(hadoop fs -cat /data/sample.txt)
+
+4) display the total size of file
+
+hadoop fs -du -s data\sample.txt								(hadoop fs -du /data/sample.txt) 
+43055  43055  data/sample.txt
+
+
+5) chmod command
+hadoop fs -chmod 777 data\Two.txt								(hadoop fs -chmod 777 /data/Two.txt)
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data\						(hadoop fs -ls /data23)
+Found 5 items
+-rwxrwxrwx   1 Administrators None         15 2023-01-08 22:06 data/Two.txt
+-rw-r--r--   1 Administrators None         12 2023-01-08 23:16 data/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:44 data/four.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+-rwxrwxrwx   1 Administrators None      43055 2023-01-09 12:50 data/sample.txt
+
+
+
+
+////////////////////////////////////////////////////////////////// 10 //////////////////////////////////////////////////
+
+1)  copy one file from one directory to another within HDFS
+hadoop fs -cp data\two.txt data1								(hadoop fs -cp /opt/hadoop/BDA/a3.txt /SG2)
+
+hadoop fs -ls data1\
+
+
+
+2)  show the statistics about the directory in the specified format.(%b,%g,%u,%n)
+hadoop fs -stat  data\Two.txt									(hadoop fs -stat /data/Two.txt)
+2023-01-08 16:36:12
+
+
+3) implement text command
+hadoop fs -text data\two.txt									(hadoop fs -text /data/two.txt)
+data is here...
+
+
+4)  fsck 
+
+hadoop fsck												(hadoop fsck /)
+
+
+5)  cat command
+
+hadoop fs -cat data\one.txt							(hadoop fs -cat /opt/hadoop/BDA/a1.txt)
+
+
+
+//////////////////////////////////////////// 11  //////////////////////////////////////////
+1) display summary of the amount of disk usage of all files.
+
+hadoop fs -du data\two.txt									(hadoop fs -du /data/two.txt)
+15  15  data/two.txt
+
+2) change permission of file 
+
+hadoop fs -chmod 777 data\emp.txt								(hadoop fs -chmod 777 /data/emp.txt)
+
+hadoop fs -ls data\
+Found 5 items
+-rwxrwxrwx   1 Administrators None         15 2023-01-08 22:06 data/Two.txt
+-rwxrwxrwx   1 Administrators None         12 2023-01-08 23:16 data/emp.txt
+-rw-r--r--   1 Administrators None         15 2023-01-08 22:44 data/four.txt
+-rw-r--r--   1 Administrators None      43055 2023-01-08 20:33 data/one.txt
+-rwxrwxrwx   1 Administrators None      43055 2023-01-09 12:50 data/sample.txt
+
+3) Create an employee.txt file with some content and Moves this file from local file
+system to the Hadoop file system.
+
+hadoop fs -copyFromLocal "C:\Users\Acer\Desktop\employee.txt" data\       (hadoop fs -moveFromLocal /opt/hadoop/Desktop/symsc53/abc.txt /p1 )
+
+C:\hadoop-3.3.4\sbin>hadoop fs -ls data\
+
+
+4)  copy one file from one directory to another within HDFS
+
+hadoop fs -cp data\employee.txt data1								(hadoop fs -cp /opt/hadoop/BDA/a3.txt /SG2)
+
+hadoop fs -ls data1\
+
+
+
+5) display last 1kb data of employee.txt file
+hadoop fs -tail -f /p1/abc.txt
+hadoop fs -tail data\employee.txt									(hadoop fs -tail -f /p1/abc.txt)
+this is employee file
+
+
+/////////////////////////////////////////////////////////   12   ///////////////////////////////////////////////////
+
+1) create patient_detalis.txt file in Hospital directory and move this file in another
+directory within hdfs.
+
+hadoop fs -mkdir Hospital								(hadoop fs -mkdir /Hospital)
+hadoop fs -touchz patient_details.txt						(hadoop fs -touchz patient_details.txt)
+
+hadoop fs -mv patient_details.txt Hospital\					(hadoop fs -mv patient_details.txt /Hospital)
+
+hadoop fs -mv Hospital\patient_details.txt data1\				(hadoop fs -mv /Hospital/patient_details.txt /P1)
+
+hadoop fs -ls data1
+
+
+2)display the total size of Hospital directory
+
+hadoop fs -du Hospital\									(hadoop fs -du /Hospital)
+15  15  Hospital/emp.txt
+
+3) stat of file 
+hadoop fs -stat Hospital									(hadoop fs -stat /Hospital) 
+2023-01-09 08:06:40
+
+4) list of all files in hospital directory.(add and list a minimum 4 files).
+
+hadoop fs -ls Hospital									(hadoop fs -ls /Hospital)
+Found 1 items
+-rwx------   1 Acer None         15 2023-01-08 20:52 Hospital/emp.txt
+
+
+5) delete hospital directory.
+
+hadoop fs -rmr Hospital								(hadoop fs -rm /Hospital) 
+
+
+rmr: DEPRECATED: Please use '-rm -r' instead.
+2023-01-09 13:44:44,063 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted Hospital
+
+////////////////////////////////////////////////////  13  /////////////////////////////////////////////////////////////
+
+
+1) Create a college.txt file in root directory and move this file in Hadoop environment.
+
+hadoop fs -copyFromLocal "C:\Users\Acer\Desktop\college.txt" data1\         (hadoop fs -copyFromLocal /opt/hadoop/BDA/a2.txt /data1)
+
+hadoop fs -ls data1\
+
+2) Count the number of files and directories in HDFS.(use specified format as option
+-v,-h,-q)
+
+hadoop fs -count [-v] [-h] [-q] data1\college.txt						(hadoop fs -count /)
+count: `[-v]': No such file or directory
+count: `[-h]': No such file or directory
+count: `[-q]': No such file or directory
+           0            1                 22 data1/college.txt
+
+
+
+3) du command
+
+hadoop fs -du data1\college.txt							(hadoop fs -du /data1/college.txt)
+22  22  data1/college.txt
+
+4) implement find command for college.txt  					(hadoop fs -find /data1)
+
+hadoop fs -find data1\college.txt
+data1/college.txt
+
+
+5) Remove a bank_details directory from Hadoop environment. (Create a bank_details
+directory).
+
+hadoop fs -mkdir bank_details									(hadoop fs -mkdir /bank_details)
+
+C:\hadoop-3.3.4\sbin>hadoop fs -rmr bank_details
+rmr: DEPRECATED: Please use '-rm -r' instead.
+2023-01-09 13:56:57,648 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted bank_details
+
+
+****************  14    
+
+a) Create a teacher.txt file in Hadoop environment and copy this file in root directory.
+hadoop fs -copyToLocal teacher.txt "C:\Users\Acer\Desktop\hadoop_data"     ( hadoop fs -copyToLocal /SG/P1.txt /opt/hadoop/Desktop/AAAAA )
+
+
+b) display the content of teacher.txt file.
+hadoop  fs -cat teacher.txt										(hadoop fs -cat teacher.txt)
+
+c) display the list of files in specified directory.(Create files and directory accordingly.)
+hadoop fs -ls data1\								(hadoop fs -ls /data1)
+
+
+d) implement tail command on teacher.txt file.
+hadoop fs -tail teacher.txt									(hadoop fs -tail teacher.txt)
+
+e) remove teacher.txt file from directory.						
+
+
+C:\hadoop-3.3.4\sbin>hadoop fs -rm teacher.txt					(hadoop fs -rm teacher.txt)
+2023-01-09 14:10:16,586 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted teacher.txt
+
+//////////////////////////////////////////////////////////////  15  ///////////////////////////////////////////////////////////
+
+
+a) create and move the bank directory into another directory within hadoop environment.
+hadoop fs -mkdir bank\									(hadoop fs -mkdir /bank)
+hadoop fs -mv bank data1									(hadoop fs -mv /bank /data1) 
+
+hadoop fs -ls data1\
+
+b) change the permission of the file.
+hadoop fs -chmod 777 data1\college.txt						(hadoop fs -chmod 777 /data1/college.txt)
+hadoop fs -ls data1\
+
+c) Display last few lines of the above customer.txt file.
+hadoop fs -tail data1\employee.txt								(hadoop fs -tail /data1/employee.txt)
+
+
+d) change the replication factor of customer.txt file in HDFS.		
+hadoop fs -setrep 2 data1\employee.txt							(hadoop fs -setrep 3 /data1/employee.txt)
+Replication 2 set: data1/employee.txt
+
+e) delete bank directory from HDFS.
+
+hadoop fs -rmr data1\bank									(hadoop -rmr /data/bank)
+rmr: DEPRECATED: Please use '-rm -r' instead.
+2023-01-09 14:16:36,807 INFO Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+Deleted data1/bank
